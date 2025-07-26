@@ -1,0 +1,59 @@
+services:
+  user_saas:
+    build:
+      context: ../
+      dockerfile: ./Infrastructure/Java_Saas/saas.Dockerfile
+    depends_on:
+      - mongo
+    ports:
+      - 8091:8091
+  
+  mongo:
+    image: mongo:8.0.12-noble
+    container_name: mongo
+    restart: always
+    command: mongod --bind_ip 0.0.0.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - 27017:27017
+
+  secrets_vault:
+    image: infisical/infisical:v0.140.0-postgres
+    container_name: infisical
+    environment:
+      - ENCRYPTION_KEY=f40c9178624764ad85a6830b37ce239a 
+      - AUTH_SECRET=q6LRi7c717a3DQ8JUxlWYkZpMhG4+RHLoFUVt3Bvo2U=
+      - DB_CONNECTION_URI=postgres://infisical:infisical@postgres:5432/infisical
+      - REDIS_URL=redis://redis:6379
+      - SITE_URL=http://localhost:8989
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - 8989:8080
+
+  postgres:
+    image: postgres:17.5-bullseye
+    container_name: infisical-postgres
+    environment:
+      POSTGRES_USER: infisical
+      POSTGRES_PASSWORD: infisical
+      POSTGRES_DB: infisical
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:8.0-bookworm
+    container_name: infisical-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+volumes:
+  pg-data:
+  redis-data:
