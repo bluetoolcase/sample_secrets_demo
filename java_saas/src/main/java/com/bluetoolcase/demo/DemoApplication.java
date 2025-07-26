@@ -17,6 +17,7 @@ public class DemoApplication {
 	@Bean
 	public ApplicationRunner initRunner(final UserService userService){
 		return args -> {
+			userService.clearAllUsers();
 			userService.createUser("galjoey", "galjoey@gmail.com");
 			userService.createUser("jgaleamt", "jgaleamt@outlook.com");
 			userService.createUser("toastmasterjoegalea", "toastmasterjoegalea@gmail.com");
