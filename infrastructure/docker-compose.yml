@@ -4,7 +4,8 @@ services:
       context: ../
       dockerfile: ./Infrastructure/Java_Saas/saas.Dockerfile
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
     ports:
       - 8091:8091
   
@@ -15,34 +16,49 @@ services:
     command: mongod --bind_ip 0.0.0.0
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo_password
+    secrets:
+      - mongo_password
     ports:
       - 27017:27017
+    healthcheck:
+      test: "echo 'db.runCommand({ ping: 1 }).ok' | mongosh mongodb://root:example@localhost:27017/admin --quiet"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+  
 
   secrets_vault:
     image: infisical/infisical:v0.140.0-postgres
     container_name: infisical
     environment:
-      - ENCRYPTION_KEY=f40c9178624764ad85a6830b37ce239a 
-      - AUTH_SECRET=q6LRi7c717a3DQ8JUxlWYkZpMhG4+RHLoFUVt3Bvo2U=
-      - DB_CONNECTION_URI=postgres://infisical:infisical@postgres:5432/infisical
-      - REDIS_URL=redis://redis:6379
-      - SITE_URL=http://localhost:8989
+      REDIS_URL: redis://redis:6379
+      SITE_URL: http://localhost:8989
     depends_on:
       - postgres
       - redis
     ports:
       - 8989:8080
+    volumes:
+      - ./infisical/entrypoint.sh:/usr/local/bin/custom-entrypoint.sh # Mount your script
+    entrypoint: ["/usr/local/bin/custom-entrypoint.sh"] # Use your custom script
+    secrets:
+      - infisical_root_encryption_key
+      - infisical_auth_secret
+      - infisical_db_connection_uri
 
   postgres:
     image: postgres:17.5-bullseye
     container_name: infisical-postgres
     environment:
       POSTGRES_USER: infisical
-      POSTGRES_PASSWORD: infisical
       POSTGRES_DB: infisical
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
     ports:
       - "5432:5432"
+    secrets:
+      - postgres_password
     volumes:
       - pg-data:/var/lib/postgresql/data
 
@@ -57,3 +73,15 @@ services:
 volumes:
   pg-data:
   redis-data:
+
+secrets:
+  mongo_password:
+    file: ./secrets/mongo_password.txt
+  postgres_password:
+    file: ./secrets/postgres_password.txt
+  infisical_root_encryption_key:
+    file: ./secrets/infisical_root_encryption_key.txt
+  infisical_auth_secret:
+    file: ./secrets/infisical_auth_secret.txt
+  infisical_db_connection_uri: # This secret will hold the full DB connection string
+    file: ./secrets/infisical_db_connection_uri.txt

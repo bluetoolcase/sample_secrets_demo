@@ -1,0 +1,3 @@
+- To test everything is working use the query `http://localhost:8091/user?email=galjoey@gmail.com`
+- Note secrets are not committed to source control
+- Since this is an example the value of secrets for mongo is `example` and for `postgres` is infiscal
