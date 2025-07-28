@@ -8,6 +8,9 @@ services:
         condition: service_healthy
     ports:
       - 8091:8091
+    secrets:
+      - infisical_client_id
+      - infisical_client_secret
   
   mongo:
     image: mongo:8.0.12-noble
@@ -85,3 +88,7 @@ secrets:
     file: ./secrets/infisical_auth_secret.txt
   infisical_db_connection_uri: # This secret will hold the full DB connection string
     file: ./secrets/infisical_db_connection_uri.txt
+  infisical_client_id:
+    file: ./secrets/infisical_client_id.txt
+  infisical_client_secret:
+    file: ./secrets/infisical_client_secret.txt
