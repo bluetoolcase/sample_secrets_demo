@@ -2,34 +2,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.bluetoolcase</groupId>
+	<parent>
+		<groupId>com.bluetoolcase</groupId>
+		<artifactId>parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../java_parent/pom.xml</relativePath>
+  	</parent>
 	<artifactId>demo</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>demo</name>
 	<description>Demo project for Spring Boot</description>
-	<properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-		<java.version>17</java.version>
-        <spring-boot.version>3.5.4</spring-boot.version>
-	</properties>
-    <!-- This would go in a parent pom-->
-    <dependencyManagement>
-        <dependencies>
-			<dependency>
-				<groupId>com.infisical</groupId>
-				<artifactId>sdk</artifactId>
-				<version>3.0.2</version>
-			</dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot.version}</version> 
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+	
+   
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -61,15 +44,6 @@
 
 	<build>
         <finalName>user_saas</finalName>
-        <pluginManagement>
-        <plugins>
-        <plugin>
-            <groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-maven-plugin</artifactId>
-            <version>${spring-boot.version}</version>
-        </plugin>
-        </plugins>
-        </pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -78,7 +52,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.4.1</version>
 				<executions>
 					<execution>
 					<phase>package</phase>

@@ -30,6 +30,9 @@ public class ApplicationConfiguration {
     @Value("${btc.infisical.client.secret}")
     private String infisicalClientSecret;
 
+    @Value("${btc.infisical.env}")
+    private String infisicalEnv;
+
     @Bean()
 	public ApplicationRunner initRunner(final UserService userService){
 		return args -> {
@@ -73,11 +76,10 @@ public class ApplicationConfiguration {
     }
 
     private String fetchUsernameFromSecureStore(final InfisicalSdk sdk) throws InfisicalException {
-       
         var secret = sdk.Secrets().GetSecret(
             "USER",
             "6c293bdb-b71d-4c18-8ee1-ce2739ceea14",
-            "dev",
+            this.infisicalEnv,
             "/mongo/",
             null, // Expand Secret References (boolean, optional)
             null, // Include Imports (boolean, optional)
@@ -90,7 +92,7 @@ public class ApplicationConfiguration {
          var secret = sdk.Secrets().GetSecret(
             "PASSWORD",
             "6c293bdb-b71d-4c18-8ee1-ce2739ceea14",
-            "dev",
+            this.infisicalEnv,
             "/mongo/",
             null, // Expand Secret References (boolean, optional)
             null, // Include Imports (boolean, optional)
