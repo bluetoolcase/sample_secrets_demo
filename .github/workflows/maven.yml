@@ -27,7 +27,9 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: Build with Maven
+    - name: Build Parent
+      run: mvn -B package --file ./java_parent/pom.xml -DskipTests
+    - name: Build Saas
       run: mvn -B package --file ./java_saas/pom.xml -DskipTests
 
 
