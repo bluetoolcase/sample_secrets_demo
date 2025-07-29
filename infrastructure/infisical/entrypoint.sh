@@ -1,8 +1,6 @@
 #!/bin/sh
 
 # Read the AUTH_SECRET from the mounted secret file
-export AUTH_SECRET=$(cat /run/secrets/infisical_auth_secret)
-
 export ROOT_ENCRYPTION_KEY=$(cat /run/secrets/infisical_root_encryption_key)
 export AUTH_SECRET=$(cat /run/secrets/infisical_auth_secret)
 export DB_CONNECTION_URI=$(cat /run/secrets/infisical_db_connection_uri)
