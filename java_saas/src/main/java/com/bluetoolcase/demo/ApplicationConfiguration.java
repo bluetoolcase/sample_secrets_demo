@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.mongodb.core.MongoClientFactoryBean;
 
 import com.bluetoolcase.demo.datalayer.UserService;
 import com.infisical.sdk.InfisicalSdk;

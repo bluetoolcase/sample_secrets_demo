@@ -1,17 +1,40 @@
 services:
-  user_saas:
+  user_java_saas:
     build:
       context: ../
       dockerfile: ./Infrastructure/Java_Saas/saas.Dockerfile
     depends_on:
       mongo:
         condition: service_healthy
+      secrets_vault:
+        condition: service_healthy
     ports:
       - 8091:8091
     secrets:
       - infisical_client_id
       - infisical_client_secret
-  
+
+  user_js_saas:
+    build:
+      context: ../
+      dockerfile: ./Infrastructure/js_saas/saas.Dockerfile
+    environment:
+      MONGO_HOST: mongo
+      MONGO_PORT: 27017
+      MONGO_DBNAME: nestdb
+      INFISICAL_URI: http://infisical:8080
+      INFISICAL_ENV: dev
+    depends_on:
+      mongo:
+        condition: service_healthy
+      secrets_vault:
+        condition: service_healthy
+    ports:
+      - 8092:3000
+    secrets:
+      - infisical_client_id
+      - infisical_client_secret
+
   mongo:
     image: mongo:8.0.12-noble
     container_name: mongo
@@ -50,6 +73,12 @@ services:
       - infisical_root_encryption_key
       - infisical_auth_secret
       - infisical_db_connection_uri
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/login"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
 
   postgres:
     image: postgres:17.5-bullseye
