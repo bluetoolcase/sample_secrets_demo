@@ -2,3 +2,4 @@
 - To test js sample is working use the query `http://localhost:8092/users?email=alice@example.com`
 - Note secrets are not committed to source control
 - Since this is an example the value of secrets for mongo is `example` and for `postgres` is infiscal
+- *DISCLAIMER:* batch file in js is for developers purpose only, you should never include the secret in the batch file as done here
