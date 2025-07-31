@@ -18,7 +18,7 @@ jobs:
         working-directory: ./js_saas
     strategy:
       matrix:
-        node-version: [22.x]
+        node-version: [22.0]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
